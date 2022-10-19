@@ -15,11 +15,9 @@ class Solution {
         boolean answer = true;
         Stack<String> myStack= new Stack<>();
 
-        String[] splited = s.split("");
-        for (String str :
-                splited) {
-            if(str.equals("(")){
-                myStack.push(str);
+        for (int i = 0; i < s.length(); i++) {
+            if(s.charAt(i)=='('){
+                myStack.push("(");
             }else{
                 try{
                     myStack.pop();
