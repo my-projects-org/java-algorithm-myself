@@ -4,29 +4,25 @@ import java.util.EmptyStackException;
 import java.util.Stack;
 
 public class Q12909 {
-    public static void main(String[] args) {
-        boolean answer = new Solution().solution(")()(");
-        System.out.println(answer);
-    }
+    class Solution {
+        boolean solution(String s) {
+            boolean answer = true;
+            Stack<String> myStack= new Stack<>();
 
-}
-class Solution {
-    boolean solution(String s) {
-        boolean answer = true;
-        Stack<String> myStack= new Stack<>();
-
-        for (int i = 0; i < s.length(); i++) {
-            if(s.charAt(i)=='('){
-                myStack.push("(");
-            }else{
-                try{
-                    myStack.pop();
-                }catch (EmptyStackException e){
-                    return false;
+            for (int i = 0; i < s.length(); i++) {
+                if(s.charAt(i)=='('){
+                    myStack.push("(");
+                }else{
+                    try{
+                        myStack.pop();
+                    }catch (EmptyStackException e){
+                        return false;
+                    }
                 }
             }
+            if(myStack.size()!= 0) return false;
+            return answer;
         }
-        if(myStack.size()!= 0) return false;
-        return answer;
     }
+
 }
