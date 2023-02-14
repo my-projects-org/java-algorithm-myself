@@ -28,13 +28,13 @@ public class Q2805 {
         System.out.println(divideTree(0,treeSizes[0],needLength,treeSizes));
     }
     private int divideTree(int start, int end, int target, Integer[] treeSizes){
-        if(start>end){
+        if(start>=end){
             return -1;
         }
         int nowDivide = (start + end)/2;
-        int expectTreeHeight = 0;
+        long expectTreeHeight = 0;
         for (Integer treeSize : treeSizes) {
-            int tmp = treeSize - nowDivide;
+            long tmp = treeSize - nowDivide;
             if(tmp>=0){
                 expectTreeHeight += tmp;
             }
