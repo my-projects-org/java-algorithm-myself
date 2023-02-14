@@ -22,9 +22,10 @@ public class Q1005 {
         for (int i = 0; i < T; i++) {
             String[] nAndK = br.readLine().split(" ");
             int N = Integer.parseInt(nAndK[0]);// 건물 갯수
-            boolean[][] graph = new boolean[N + 1][N + 1];
-            boolean[][] graphReverse = new boolean[N + 1][N + 1];
-
+            List<Integer>[] tmpGraph = new ArrayList[N+1];
+            for (int j = 0; j < N+1; j++) {
+                tmpGraph[j] = new ArrayList<Integer>();
+            }
             int K = Integer.parseInt(nAndK[1]);// 규칙 수
             Arrays.fill(cache, null);
             buildTime = Arrays.stream(br.readLine().split(" "))
@@ -33,11 +34,10 @@ public class Q1005 {
                 String[] startAndEnd = br.readLine().split(" ");
                 int start = Integer.parseInt(startAndEnd[0]);
                 int end = Integer.parseInt(startAndEnd[1]);
-//                graph[start][end] = true;
-                graphReverse[end][start] = true; // 해당 노드가 의존하는 노드를 가르킴
+                tmpGraph[end].add(start);// 해당 노드가 의존하는 노드를 가르킴
             }
             int nodeNumberForWin = Integer.parseInt(br.readLine());
-            int result = dp(nodeNumberForWin, graphReverse, cache);
+            int result = dpUsingTmpGraph(nodeNumberForWin,tmpGraph,cache);
             System.out.println(result);
             //거꾸로 해서 이 건물 부터 시작해야 할 듯
             //이건물을 짓기 위해 필요한 건물 -> 그 건물을 짓기 위해 필요한 건물 -> 그 건물을 짓기 위해 필요한 건물
@@ -45,32 +45,29 @@ public class Q1005 {
             //그중 최소
         }
     }
-
-    private int dp(int targetNumber, boolean[][] graphReverse, Integer[] cache) {//해당 건물을 깃는데 걸리는 최소 시간
+    private int dpUsingTmpGraph(int targetNumber, List<Integer>[] tmpGraph, Integer[] cache) {//해당 건물을 깃는데 걸리는 최소 시간
         if (cache[targetNumber] != null) {
             return cache[targetNumber];
         } else {
 
             List<Integer> tmp = new ArrayList();
-            for (int i = 0; i < graphReverse[targetNumber].length; i++) {
-                if (graphReverse[targetNumber][i]) {
-                    tmp.add(dp(i, graphReverse, cache));
-                }
+            for (Integer integer : tmpGraph[targetNumber]) {
+                tmp.add(dpUsingTmpGraph(integer, tmpGraph, cache));
             }
-            try{
+            try {
                 Integer max = Collections.max(tmp);
-                return max + buildTime[targetNumber - 1];
-            } catch (NoSuchElementException e){
-                cache[targetNumber] = buildTime[targetNumber -1];
+                cache[targetNumber] = max + buildTime[targetNumber - 1];;
+                return cache[targetNumber];
+            } catch (NoSuchElementException e) {
+                cache[targetNumber] = buildTime[targetNumber - 1];
                 return cache[targetNumber];
             }
 
         }
+    }
+
         // 해당 건물을 짓는데 필요한 건물들을 알아야함
         // 이 건물이 의존하고 있는 건물 이 없다면 바로 return
 
-//        int numberOfNeedNode = Arrays.stream(graphReverse[targetNumber]).filter(element -> element == true).toArray().length;
 
-
-    }
 }
